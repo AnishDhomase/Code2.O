@@ -5,61 +5,46 @@ public:
         int switchInc_Dec = 0;
         bool colChange = true, increment = true;
         int r=0, c=0, rows=matrix.size(), cols=matrix[0].size();
+        int topRowCovered = -1, bottomRowCovered = rows;
+        int leftColCovered = -1, RightColCovered = cols;
         ans.push_back(matrix[0][0]);
-        vector<int> rowCovered(rows,0), colCovered(cols,0);
-        while(true){
+        while((topRowCovered+1 < bottomRowCovered) && (leftColCovered+1 < RightColCovered)){
             if(increment){
                 if(colChange){
-                    while(c+1<cols && !colCovered[c+1]){
+                    while(c+1 < RightColCovered){
                         c++;
                         ans.push_back(matrix[r][c]);
                     }
-                    rowCovered[r] = 1;
-                    if(r+1==rows || rowCovered[r+1]) break;
-                    switchInc_Dec++;
-                    if(switchInc_Dec % 2 == 0)
-                        increment = ! increment;
-                    colChange = ! colChange;
+                    topRowCovered ++;
                 }
                 else{
-                    while(r+1<rows && !rowCovered[r+1]){
+                    while(r+1 < bottomRowCovered){
                         r++;
                         ans.push_back(matrix[r][c]);
                     }
-                    colCovered[c] = 1;
-                    if(c-1<0 || colCovered[c-1]) break;
-                    switchInc_Dec++;
-                    if(switchInc_Dec % 2 == 0)
-                        increment = ! increment;
-                    colChange = ! colChange;
+                    RightColCovered--;
                 }
             }
             else{
                 if(colChange){
-                    while(c-1>=0 && !colCovered[c-1]){
+                    while(c-1 > leftColCovered){
                         c--;
                         ans.push_back(matrix[r][c]);
                     }
-                    rowCovered[r] = 1;
-                    if(r-1<0 || rowCovered[r-1]) break;
-                    switchInc_Dec++;
-                    if(switchInc_Dec % 2 == 0)
-                        increment = ! increment;
-                    colChange = ! colChange;
+                    bottomRowCovered --;
                 }
                 else{
-                    while(r-1>=0 && !rowCovered[r-1]){
+                    while(r-1 > topRowCovered){
                         r--;
                         ans.push_back(matrix[r][c]);
                     }
-                    colCovered[c] = 1;
-                    if(c+1==cols || colCovered[c+1]) break;
-                    switchInc_Dec++;
-                    if(switchInc_Dec % 2 == 0)
-                        increment = ! increment;
-                    colChange = ! colChange;
-                }
-            }        
+                    leftColCovered ++;
+                }    
+            }  
+            switchInc_Dec++;
+            if(switchInc_Dec % 2 == 0)
+                increment = ! increment;
+            colChange = ! colChange;      
         }
         return ans;
     }
