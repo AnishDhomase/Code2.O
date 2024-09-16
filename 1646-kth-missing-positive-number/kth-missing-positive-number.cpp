@@ -13,7 +13,6 @@ public:
             int afterThis = k - (arr[high] - high - 1);
             return arr[high] + afterThis;
         }
-        int beforeThis = (arr[low] - low - 1) - (k-1);
-        return arr[low] - beforeThis;
+        return k;
     }
 };
