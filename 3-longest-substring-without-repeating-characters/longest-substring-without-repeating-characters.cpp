@@ -1,21 +1,27 @@
 class Solution {
+    bool isRepeatition(unordered_map<char,int> &freq){
+        for(auto it=freq.begin(); it!=freq.end(); it++){
+            int freqOfChar = (*it).second;
+            if(freqOfChar > 1)
+                return true;
+        }
+        return false;
+    }
 public:
     int lengthOfLongestSubstring(string s) {
         int l=0, r=0, n = s.length(), maxL=0;
-        set<char> st;
+        unordered_map<char,int> freq;
         while(l<=r && r<n){
-            if(st.find(s[r]) == st.end()){
-                st.insert(s[r]);
+            freq[s[r]] ++;
+            if(! isRepeatition(freq)){
+                maxL = max(maxL, r-l+1);
                 r ++;
-                maxL = max(maxL, r-l);
-                continue;
             }
-            else while(s[l] != s[r]){
-                st.erase(s[l]);
+            else {
+                freq[s[l]] --;
                 l ++;
+                r ++;
             }
-            l ++;
-            r ++;
         }
         maxL = max(maxL, r-l);
         return maxL;
