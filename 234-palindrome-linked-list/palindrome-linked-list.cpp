@@ -11,20 +11,26 @@
 class Solution {
 public:
     bool isPalindrome(ListNode* head) {
-        string str;
-        ListNode *t = head;
-        while(t){
-            str += (t->val + 48);
-            t = t->next;
+        if(!head || !head->next)    return true;
+        ListNode *prev = NULL, *slow = head, *nxt = head->next, *fast = head;
+        while(fast && fast->next && fast->next->next){
+            fast = fast->next->next;
+            slow->next = prev;
+            prev = slow;
+            slow = nxt;
+            if(nxt) nxt = nxt->next;
         }
-        int n = str.length();
-        int i=0, j=n-1;
-        while(i<j){
-            if(str[i] != str[j])
+        if(fast->next == NULL)
+            slow = prev;
+        else
+            slow->next = prev;
+        while(slow && nxt){
+            if(slow->val != nxt->val)
                 return false;
-            i++;
-            j--;
+            slow = slow -> next;
+            nxt = nxt -> next;
         }
         return true;
+
     }
 };
