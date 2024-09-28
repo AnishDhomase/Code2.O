@@ -5,11 +5,11 @@ public:
         if(grid[0][0] !=0 || grid[n-1][n-1] !=0)
             return -1;
         vector<vector<int>> dist(n,vector<int>(n,1e9));
-        priority_queue<pair<int,pair<int,int>>, vector<pair<int,pair<int,int>>>, greater<pair<int,pair<int,int>>>> minHp;
+        queue<pair<int,pair<int,int>>> minHp;
         minHp.push({1,{0,0}});
         dist[0][0] = 1;
         while(minHp.size() > 0){
-            auto curr = minHp.top();
+            auto curr = minHp.front();
             minHp.pop();
             int y = curr.second.first;
             int x = curr.second.second;
