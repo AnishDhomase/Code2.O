@@ -5,11 +5,12 @@ public:
         vector<int> mp(26,0);
         while(r < n){
             mp[s[r] - 'A'] ++;
-            while((r-l+1) - *max_element(mp.begin(), mp.end())  > k){
+            if((r-l+1) - *max_element(mp.begin(), mp.end()) > k){
                 mp[s[l] - 'A'] --;
                 l ++;
             }
-            maxL = max(maxL, r-l+1);
+            if((r-l+1) - *max_element(mp.begin(), mp.end()) <= k)
+                maxL = max(maxL, r-l+1);
             r ++;
         }
         return maxL;
