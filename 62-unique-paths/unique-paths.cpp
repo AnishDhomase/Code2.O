@@ -11,17 +11,17 @@ public:
     int uniquePaths(int m, int n) {
         vector<vector<int>> dp(m, vector<int>(n,-1));
         // return ways(m-1,n-1,dp);
-        for(int r=0; r<m; r++)  dp[r][0] = 1;
-        for(int c=0; c<n; c++)  dp[0][c] = 1;
+        vector<int> prevRow(n,1), currRow(n,1);
+        // for(int r=0; r<m; r++)  dp[r][0] = 1;
+        // for(int c=0; c<n; c++)  dp[0][c] = 1;
         for(int r=1; r<m; r++){
             for(int c=1; c<n; c++){
-                int left = dp[r][c-1]; 
-                int top = dp[r-1][c];
-                dp[r][c] = left + top; 
+                int left = currRow[c-1]; 
+                int top = prevRow[c];
+                currRow[c] = left + top; 
             }
+            prevRow = currRow;
         }
-        return dp[m-1][n-1];
-
-        
+        return prevRow[n-1];
     }
 };
