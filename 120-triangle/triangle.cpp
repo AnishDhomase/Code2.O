@@ -11,19 +11,21 @@ class Solution {
 public:
     int minimumTotal(vector<vector<int>>& triangle) {
         int n = triangle.size();
-        vector<vector<int>> dp(n,vector<int>(n,1e9));
+        // vector<vector<int>> dp(n,vector<int>(n,1e9));
         // return getMinPath(0, 0, triangle, dp);
+        vector<int> next(n), curr(n);
         for(int c=0; c<n; c++)
-            dp[n-1][c] = triangle[n-1][c];
+            next[c] = triangle[n-1][c];
         for(int r=n-2; r>=0; r--){
             for(int c=r; c>=0; c--){
-                int down = dp[r+1][c];
-                int diag = dp[r+1][c+1];
+                int down = next[c];
+                int diag = next[c+1];
 
-                dp[r][c] = min(down, diag) + triangle[r][c];
+                curr[c] = min(down, diag) + triangle[r][c];
             }
+            next = curr;
         }
-        return dp[0][0];
+        return next[0];
        
     }
 };
