@@ -1,5 +1,5 @@
 class Solution {
-    int ways(int i, int amt, vector<int>& coins, vector<vector<int>> &dp){
+    int ways(int i, int amt, vector<int>& coins, vector<vector<long long>> &dp){
         if(amt == 0)    return 1;
         if(i==0)    return amt % coins[0] == 0;
         if(dp[i][amt] != -1)    return dp[i][amt];
@@ -13,7 +13,21 @@ class Solution {
 public:
     int change(int amount, vector<int>& coins) {
         int n = coins.size();
-        vector<vector<int>> dp(n, vector<int>(amount+1, -1));
-        return ways(n-1, amount, coins, dp);
+        vector<vector<long long>> dp(n, vector<long long>(amount+1, -1));
+        // return ways(n-1, amount, coins, dp);
+        for(int i=0; i<n; i++)  
+            dp[i][0] = 1;
+        for(int amt=0; amt<=amount; amt++)  
+            dp[0][amt] = amt % coins[0] == 0;
+
+        for(int i=1; i<n; i++){
+            for(int amt=1; amt<=amount; amt++){
+                int notPick, pick = 0;
+                notPick = dp[i-1][amt];
+                if(coins[i] <= amt) pick = dp[i][amt - coins[i]];
+                dp[i][amt] = (long long) pick + (long long) notPick;
+            }
+        }
+        return dp[n-1][amount];
     }
 };
