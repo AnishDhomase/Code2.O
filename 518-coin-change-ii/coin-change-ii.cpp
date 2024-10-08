@@ -13,21 +13,22 @@ class Solution {
 public:
     int change(int amount, vector<int>& coins) {
         int n = coins.size();
-        vector<vector<long long>> dp(n, vector<long long>(amount+1, -1));
+        vector<long long> prev(amount+1), curr(amount+1, 1);
         // return ways(n-1, amount, coins, dp);
-        for(int i=0; i<n; i++)  
-            dp[i][0] = 1;
+        // for(int i=0; i<n; i++)  
+        //     dp[i][0] = 1;
         for(int amt=0; amt<=amount; amt++)  
-            dp[0][amt] = amt % coins[0] == 0;
+            prev[amt] = amt % coins[0] == 0;
 
         for(int i=1; i<n; i++){
             for(int amt=1; amt<=amount; amt++){
                 int notPick, pick = 0;
-                notPick = dp[i-1][amt];
-                if(coins[i] <= amt) pick = dp[i][amt - coins[i]];
-                dp[i][amt] = (long long) pick + (long long) notPick;
+                notPick = prev[amt];
+                if(coins[i] <= amt) pick = curr[amt - coins[i]];
+                curr[amt] = (long long) pick + (long long) notPick;
             }
+            prev = curr;
         }
-        return dp[n-1][amount];
+        return prev[amount];
     }
 };
