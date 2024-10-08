@@ -24,10 +24,10 @@ public:
             for(int amt=1; amt<=amount; amt++){
                 int notPick, pick = 0;
                 notPick = prev[amt];
-                if(coins[i] <= amt) pick = curr[amt - coins[i]];
-                curr[amt] = (long long) pick + (long long) notPick;
+                if(coins[i] <= amt) pick = prev[amt - coins[i]];
+                prev[amt] = (long long) pick + (long long) notPick;
             }
-            prev = curr;
+
         }
         return prev[amount];
     }
