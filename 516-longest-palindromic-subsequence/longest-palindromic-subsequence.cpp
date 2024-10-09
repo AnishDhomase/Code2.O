@@ -12,25 +12,22 @@ class Solution {
 public:
     int longestPalindromeSubseq(string s) {
         int  n = s.length();
-        vector<vector<int>> dp(n+1, vector<int>(n+1,-1));
+        // vector<vector<int>> dp(n+1, vector<int>(n+1,-1));
+        vector<int> prev(n+1, 0), curr(n+1, 0);
         string revS = s;
         reverse(revS.begin(), revS.end());
-        // return getLCS(n, n, s, revS, dp);
-        for(int j=0; j<=n; j++){
-            dp[0][j] = 0;
-            dp[j][0] = 0;
-        }
         for(int i=1; i<=n; i++){
             for(int j=1; j<=n; j++){
                 if(s[i-1] == revS[j-1]){
-                    dp[i][j] = 1 + dp[i-1][j-1];
+                    curr[j] = 1 + prev[j-1];
                     continue;
                 }
-                int p1 = dp[i-1][j];
-                int p2 = dp[i][j-1];
-                dp[i][j] = max(p1, p2);
+                int p1 = prev[j];
+                int p2 = curr[j-1];
+                curr[j] = max(p1, p2);
             }
+            prev = curr;
         }
-        return dp[n][n];
+        return prev[n];
     }
 };
