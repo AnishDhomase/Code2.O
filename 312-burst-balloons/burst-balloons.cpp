@@ -15,10 +15,24 @@ class Solution {
 public:
     int maxCoins(vector<int>& nums) {
         int n = nums.size();
-        vector<vector<int>> dp(n+1, vector<int>(n+1, -1));
+        vector<vector<int>> dp(n+2, vector<int>(n+2, 0));
         vector<int> baloon = {1};
         for(auto num : nums)    baloon.push_back(num);
         baloon.push_back(1);
-        return getMaxCoins(1, n, baloon, dp);
+        // return getMaxCoins(1, n, baloon, dp);
+
+        for(int i=n; i>=1; i--){
+            for(int j=i; j<=n; j++){
+                int maxC = 0;
+                for(int b=i; b<=j; b++){
+                    int coins = baloon[i-1] * baloon[b] * baloon[j+1];
+                    coins += dp[i][b-1];
+                    coins += dp[b+1][j];
+                    maxC = max(maxC, coins);
+                }
+                dp[i][j] = maxC;
+            }
+        }
+        return dp[1][n];
     }
 };
