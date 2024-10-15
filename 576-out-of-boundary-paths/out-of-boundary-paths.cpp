@@ -1,8 +1,8 @@
 class Solution {
     int mod = 1e9 + 7;
     int getWays(int r, int c, int moves, int m, int n, vector<vector<vector<int>>> &dp){
-        if(moves == 0)  return r<0 || c<0 || r == m || c == n;
-        if(r<0 || c<0 || r == m || c == n)  return 1;
+        if(moves == 0)  return r==0 || c==0 || r == m+1 || c == n+1;
+        if(r==0 || c==0 || r == m+1 || c == n+1)  return 1;
         if(dp[r][c][moves] != -1)   return dp[r][c][moves];
 
         int ways = 0;
@@ -17,7 +17,7 @@ class Solution {
     }
 public:
     int findPaths(int m, int n, int maxMove, int startRow, int startColumn) {
-        vector<vector<vector<int>>> dp(m, vector<vector<int>>(n, vector<int>(maxMove + 1, -1)));
-        return getWays(startRow, startColumn, maxMove, m, n, dp);
+        vector<vector<vector<int>>> dp(m+1, vector<vector<int>>(n+1, vector<int>(maxMove + 1, -1)));
+        return getWays(startRow+1, startColumn+1, maxMove, m, n, dp);
     }
 };
