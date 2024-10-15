@@ -26,7 +26,17 @@ class Solution {
 public:
     int minCut(string s) {
         int n = s.length();
-        vector<int> dp(n, -1);
-        return getMinCuts(0, s, dp) - 1;
+        vector<int> dp(n+1, 0);
+        // return getMinCuts(0, s, dp) - 1;
+        for(int i=n-1; i>=0; i--){
+            int minCuts = 1e9;
+            for(int p=i; p<n; p++){
+                if(!isPal(i, p, s))    continue;
+                int cuts = 1 + dp[p+1];
+                minCuts = min(minCuts, cuts);
+            }
+            dp[i] = minCuts;
+        }
+        return dp[0] - 1;
     }
 };
