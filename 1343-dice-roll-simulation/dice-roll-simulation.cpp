@@ -17,7 +17,9 @@ class Solution {
 public:
     int dieSimulator(int n, vector<int>& rollMax) {
         // vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(7, vector<int>(16, -1)));
-        vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(7, vector<int>(16, 1)));
+        // vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(7, vector<int>(16, 1)));
+        vector<vector<int>> prev(7, vector<int>(16, 1));
+        vector<vector<int>> curr(7, vector<int>(16, 1));
         // return getSeqCnt(n, 6, 0, rollMax, dp);
         for(int i=1; i<=n; i ++){
             for(int lastDice = 6; lastDice >= 0; lastDice --){
@@ -25,14 +27,15 @@ public:
                     int ways = 0;
                     for(int dice = 0; dice <= 5; dice ++){
                         if(dice != lastDice)
-                            ways = (ways + dp[i-1][dice][1]) % mod;
+                            ways = (ways + prev[dice][1]) % mod;
                         else if(consecutive + 1 <= rollMax[lastDice])
-                            ways = (ways + dp[i-1][lastDice][consecutive + 1]) % mod;
+                            ways = (ways + prev[lastDice][consecutive + 1]) % mod;
                     }
-                    dp[i][lastDice][consecutive] = ways;
+                    curr[lastDice][consecutive] = ways;
                 }   
             }
+            prev = curr;
         }
-        return dp[n][6][0];
+        return prev[6][0];
     }
 };
