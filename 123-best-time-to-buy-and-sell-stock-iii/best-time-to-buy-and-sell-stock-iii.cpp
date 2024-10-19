@@ -14,7 +14,19 @@ class Solution {
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
-        vector<vector<int>> dp(n, vector<int>(5, -1));
-        return getMaxProfit(0, 4, prices, dp);
+        // vector<vector<int>> dp(n, vector<int>(5, -1));
+        // return getMaxProfit(0, 4, prices, dp);
+        vector<vector<int>> dp(n+1, vector<int>(5, 0));
+        for(int i = n-1; i>=0; i--){
+            for(int trans = 1; trans <= 4; trans ++){
+                int sign = trans % 2 ? 1 : -1;
+                int consider = sign * prices[i] + dp[i+1][trans-1];
+                int notConsider = dp[i+1][trans];
+
+                dp[i][trans] = max(consider, notConsider);
+            }
+        }
+        return dp[0][4];
+        
     }
 };
