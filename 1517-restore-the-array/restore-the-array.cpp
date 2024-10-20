@@ -22,7 +22,18 @@ class Solution {
 public:
     int numberOfArrays(string s, int k) { 
         int n = s.length();
-        vector<int> dp(n, -1);
-        return getWays(0, s, k, dp);
+        // vector<int> dp(n, -1);
+        // return getWays(0, s, k, dp);
+        vector<int> dp(n+1, 0);
+        dp[n] = 1;
+        for(int i=n-1; i>=0; i--){
+            if(s[i] == '0') continue;
+
+            int ways = 0;
+            for(int len = 1; isValid(i, len, s, k); len ++)
+                ways = (ways + dp[i + len]) % mod;
+            dp[i] = ways;
+        }
+        return dp[0];
     }
 };
