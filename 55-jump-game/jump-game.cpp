@@ -15,7 +15,22 @@ class Solution {
 public:
     bool canJump(vector<int>& nums) {
         int n = nums.size();
-        vector<int> dp(n, -1);
-        return getCanReach(0, nums, dp);
+        // vector<int> dp(n, -1);
+        // return getCanReach(0, nums, dp);
+        vector<int> dp(n, 1);
+        for(int i=n-2; i>=0; i--){
+            int maxJump = nums[i];
+            bool flag = true;
+            for(int jump = 1; jump <= maxJump; jump ++){
+                if(i + jump >= n)   break;
+                if(dp[i + jump]){
+                    dp[i] = true;
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag)    dp[i] = false;
+        }
+        return dp[0];
     }
 };
