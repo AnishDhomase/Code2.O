@@ -21,17 +21,19 @@ class Solution {
     }
 public:
     int countVowelPermutation(int n) {
-        vector<vector<int>> dp(n+2, vector<int>(6, 1));
+        // vector<vector<int>> dp(n+2, vector<int>(6, 1));
         // return getWays(1, 0, n, dp);
+        vector<int> next(6, 1), curr(6);
         for(int i=n; i>=1; i--){
             for(int prevChar=0; prevChar <=5; prevChar ++){
                 int ways = 0;
                 auto options = getCharOptions(prevChar);
                 for(auto opt : options)
-                    ways = (ways + dp[i+1][opt]) % mod;
-                dp[i][prevChar] = ways;
+                    ways = (ways + next[opt]) % mod;
+                curr[prevChar] = ways;
             }
+            next = curr;
         }
-        return dp[1][0];
+        return curr[0];
     }
 };
