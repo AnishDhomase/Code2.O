@@ -10,16 +10,19 @@
  * };
  */
 class Solution {
+    bool isSame(TreeNode *r1, TreeNode *r2){
+        if(r1 == NULL && r2 == NULL)    return true;
+        if(r1 == NULL && r2 != NULL)    return false;
+        if(r2 == NULL && r1 != NULL)    return false;
+        if(r1->val != r2->val)  return false;
+
+        int isLeftSame = isSame(r1->left, r2->left);
+        if(!isLeftSame)    return false;
+        int isRightSame = isSame(r1->right, r2->right);
+        return isRightSame;
+    }
 public:
     bool isSameTree(TreeNode* p, TreeNode* q) {
-        if(p && q){
-            if(p->val != q->val)    return false;
-            if(! isSameTree(p->left, q->left))  return false;
-            if(! isSameTree(p->right, q->right))  return false;
-            return true;
-        }
-        if(p==NULL && q==NULL)  return true;
-        return false;
-       
+        return isSame(p, q);
     }
 };
