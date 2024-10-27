@@ -41,8 +41,25 @@ class Solution {
     }
 public:
     int minSwap(vector<int>& nums1, vector<int>& nums2) {
+        // int n = nums1.size();
+        // vector<vector<vector<int>>> dp(n, vector<vector<int>>(3, vector<int>(3, -1)));
+        // return getMinSwaps(0, 0, 0, nums1, nums2, dp);
         int n = nums1.size();
-        vector<vector<vector<int>>> dp(n, vector<vector<int>>(3, vector<int>(3, -1)));
-        return getMinSwaps(0, 0, 0, nums1, nums2, dp);
+        vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(3, vector<int>(3, 0)));
+        for(int i=n-1; i>=0; i--){
+            for(int prev1=0; prev1 <=2; prev1++){
+                for(int prev2=0; prev2 <=2; prev2++){
+                    int doSwap = 1e9, doNoSwap = 1e9;
+                    if(isNoSwapPossible(i, prev1, prev2, nums1, nums2))
+                        doNoSwap = 0 + dp[i+1][1][2];
+
+                    if(isSwapPossible(i, prev1, prev2, nums1, nums2))
+                        doSwap = 1 + dp[i+1][2][1];
+
+                    dp[i][prev1][prev2] = min(doSwap, doNoSwap);
+                }
+            }
+        }
+        return dp[0][0][0];
     }
 };
