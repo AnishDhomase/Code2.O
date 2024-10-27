@@ -14,7 +14,8 @@ class Solution {
 public:
     int findMaxForm(vector<string>& strs, int m, int n) {
         int sz = strs.size();
-        vector<vector<vector<int>>> dp(sz, vector<vector<int>>(m+1, vector<int>(n+1, -1)));
+        // vector<vector<vector<int>>> dp(sz+1, vector<vector<int>>(m+1, vector<int>(n+1, 0)));
+        vector<vector<int>> curr(m+1, vector<int>(n+1, 0)), next(m+1, vector<int>(n+1, 0));
         vector<vector<int>> arr;
         for(auto str : strs){
             int zeros = 0, ones = 0;
@@ -24,6 +25,20 @@ public:
             }
             arr.push_back({zeros, ones});
         }
-        return getLargestSubset(0, 0, 0, arr, m, n, dp);
+        for(int i=sz-1; i>=0; i--){
+            for(int zeroes=m; zeroes>=0; zeroes--){
+                for(int ones=n; ones>=0; ones--){
+                    int take = 0;
+                    int newZ = zeroes + arr[i][0], newO = ones + arr[i][1];
+                    if(newZ <= m && newO <= n)
+                        take = 1 + next[newZ][newO];
+                    int notTake = 0 + next[zeroes][ones];
+                    curr[zeroes][ones] = max(take, notTake);
+                }
+            }
+            next = curr;
+        }
+        return curr[0][0];
+        // return getLargestSubset(0, 0, 0, arr, m, n, dp);
     }
 };
