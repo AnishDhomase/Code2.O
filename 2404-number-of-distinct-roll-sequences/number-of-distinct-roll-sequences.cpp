@@ -18,7 +18,8 @@ public:
     int distinctSequences(int n) {
         // vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(7, vector<int>(7, -1)));
         // return getWays(n, 0, 0, dp);
-        vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(7, vector<int>(7, 1)));
+        // vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(7, vector<int>(7, 1)));
+        vector<vector<int>> prevRow(7, vector<int>(7, 1)), currRow(7, vector<int>(7, 1));
         for(int N=1; N<=n; N++){
             for(int prevPrev=0; prevPrev<=6; prevPrev ++){
                 for(int prev=0; prev<=6; prev ++){
@@ -28,12 +29,13 @@ public:
                         int gcd = prev == 0 ? 1 : __gcd(prev, dice);
                         if(gcd != 1)    continue;
 
-                        ways = ((LL) ways + dp[N-1][prev][dice]) % mod;
+                        ways = ((LL) ways + prevRow[prev][dice]) % mod;
                     }
-                    dp[N][prevPrev][prev] = ways;
+                    currRow[prevPrev][prev] = ways;
                 }
             }
+            prevRow = currRow;
         }
-        return dp[n][0][0];
+        return currRow[0][0];
     }
 };
