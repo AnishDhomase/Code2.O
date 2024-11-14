@@ -16,7 +16,24 @@ class Solution {
     }
 public:
     int distinctSequences(int n) {
-        vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(7, vector<int>(7, -1)));
-        return getWays(n, 0, 0, dp);
+        // vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(7, vector<int>(7, -1)));
+        // return getWays(n, 0, 0, dp);
+        vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(7, vector<int>(7, 1)));
+        for(int N=1; N<=n; N++){
+            for(int prevPrev=0; prevPrev<=6; prevPrev ++){
+                for(int prev=0; prev<=6; prev ++){
+                    LL ways = 0;
+                    for(int dice=1; dice<=6; dice++){
+                        if(dice == prevPrev || dice == prev)    continue;
+                        int gcd = prev == 0 ? 1 : __gcd(prev, dice);
+                        if(gcd != 1)    continue;
+
+                        ways = ((LL) ways + dp[N-1][prev][dice]) % mod;
+                    }
+                    dp[N][prevPrev][prev] = ways;
+                }
+            }
+        }
+        return dp[n][0][0];
     }
 };
