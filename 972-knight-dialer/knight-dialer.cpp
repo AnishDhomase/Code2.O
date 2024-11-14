@@ -32,7 +32,9 @@ public:
         //     }
         // }
         // return ways;
-        vector<vector<vector<int>>> dp(n+1, vector<vector<int>> (3, vector<int> (4, 1)));
+
+        // vector<vector<vector<int>>> dp(n+1, vector<vector<int>> (3, vector<int> (4, 1)));
+        vector<vector<int>> prev(3, vector<int> (4, 1)), curr(3, vector<int> (4, 1));
         vector<int> dX = {-2, -2, 2, 2, 1, -1, 1, -1};
         vector<int> dY = {1, -1, 1, -1, -2, -2, 2, 2};
         for(int len=2; len<=n; len++){
@@ -44,16 +46,17 @@ public:
                         int adjX = x  + dX[i];
                         int adjY = y  + dY[i];
                         if(isValidAdjCell(adjX, adjY))
-                            ways = ((LL) ways + dp[len-1][adjX][adjY]) % mod;         
+                            ways = ((LL) ways + prev[adjX][adjY]) % mod;         
                     }
-                    dp[len][x][y] = ways;
+                    curr[x][y] = ways;
                 }
             }
+            prev = curr;
         }
         for(int x=0; x<3; x++){
             for(int y=0; y<4; y++)
                 if(isValidAdjCell(x, y))
-                    ways = ((LL) ways + dp[n][x][y]) % mod;     
+                    ways = ((LL) ways + curr[x][y]) % mod;     
         }
         return ways;
         
