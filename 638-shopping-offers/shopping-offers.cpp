@@ -1,5 +1,5 @@
 class Solution {
-    int getMinPrize(int i, vector<int> &items, vector<int>& price, vector<vector<int>>& special){
+    int getMinPrize(int i, vector<int> &items, vector<int>& price, vector<vector<int>>& special, map<pair<int,vector<int>>, int> &dp){
         int m = special.size(), n = items.size();
         if(i == m){
             int cost = 0;
@@ -7,20 +7,21 @@ class Solution {
                 cost += items[j] * price[j];
             return cost;
         }
+        if(dp.find({i,items}) != dp.end())  return dp[{i,items}];
         // ignore offer
-        int ignore = getMinPrize(i+1, items, price, special);
+        int ignore = getMinPrize(i+1, items, price, special, dp);
         // apply offer
         vector<int> oldItems = items;
         for(int j=0; j<n; j++){
             if(items[j] < special[i][j]){
                 items = oldItems;
-                return ignore;
+                return dp[{i,items}] = ignore;
             }
             else items[j] -= special[i][j];
         }
-        int apply = special[i][n] + getMinPrize(i, items, price, special);
+        int apply = special[i][n] + getMinPrize(i, items, price, special, dp);
         items = oldItems;
-        return min(ignore, apply);
+        return dp[{i,items}] = min(ignore, apply);
     }
 public:
     int shoppingOffers(vector<int>& price, vector<vector<int>>& special, vector<int>& needs) {
@@ -39,6 +40,8 @@ public:
             vec.push_back(it.second);
             newSpecial.push_back(vec);
         }   
-        return getMinPrize(0, needs, price, newSpecial);
+        int m = special.size(), n = needs.size();
+        map<pair<int,vector<int>>, int> dp;
+        return getMinPrize(0, needs, price, newSpecial, dp);
     }
 };
