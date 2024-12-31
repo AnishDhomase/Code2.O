@@ -4,18 +4,18 @@ class Solution {
         if(i == n)  return 0;
         if(dp[i] != -1) return dp[i];
 
-        // 1 day
-        int buy1DayTicket = costs[0] + getMinCost(i+1, days, costs, dp);
-        // 7 days
-        int ticketValidUpto = days[i] + 6;
-        int ub = upper_bound(days.begin(), days.end(), ticketValidUpto) - days.begin();
-        int buy7DayTicket = costs[1] + getMinCost(ub, days, costs, dp);
-        // 30 days
-        ticketValidUpto = days[i] + 29;
-        ub = upper_bound(days.begin(), days.end(), ticketValidUpto) - days.begin();
-        int buy30DayTicket = costs[2] + getMinCost(ub, days, costs, dp);
-
-        return dp[i] = min(buy1DayTicket, min(buy7DayTicket, buy30DayTicket));
+        // get 1 day pass
+        int pass1 = costs[0] + getMinCost(i+1, days, costs, dp);
+        // get 7 day pass
+        auto it = lower_bound(days.begin(), days.end(), days[i]+7);
+        int nextDayindex = it - days.begin();
+        int pass7 = costs[1] + getMinCost(nextDayindex, days, costs, dp);
+        // get 30 day pass
+        it = lower_bound(days.begin(), days.end(), days[i]+30); 
+        nextDayindex = it - days.begin();
+        int pass30 = costs[2] + getMinCost(nextDayindex, days, costs, dp);
+        
+        return dp[i] = min(pass1, min(pass7, pass30));
     }
 public:
     int mincostTickets(vector<int>& days, vector<int>& costs) {
