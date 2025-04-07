@@ -17,23 +17,24 @@ public:
         // vector<vector<int>> dp(n, vector<int>(totalSum+1, -1));
         // return isPartitionPossible(0, 0, totalSum, nums, dp);
 
-        vector<vector<int>> dp(n+1, vector<int>(totalSum+1, -1));
+        vector<int> next(totalSum+1, -1), prev(totalSum+1);
         for(int subSetSum=totalSum; subSetSum>=0; subSetSum--)
-            dp[n][subSetSum] = subSetSum * 2 == totalSum;
+            next[subSetSum] = subSetSum * 2 == totalSum;
 
         for(int i=n-1; i>=0; i--){
             for(int subSetSum=totalSum; subSetSum>=0; subSetSum--){
                 // don't add to subSet
-                if(dp[i+1][subSetSum]){
-                    dp[i][subSetSum] = true;
+                if(next[subSetSum]){
+                    prev[subSetSum] = true;
                     continue;
                 }
                 // add to subSet
                 if(subSetSum + nums[i] <= totalSum)
-                    dp[i][subSetSum] = dp[i + 1][subSetSum + nums[i]];
-                else    dp[i][subSetSum] = false;
+                    prev[subSetSum] = next[subSetSum + nums[i]];
+                else    prev[subSetSum] = false;
             }
+            next = prev;
         }
-        return dp[0][0];
+        return prev[0];
     }
 };
