@@ -14,8 +14,26 @@ public:
     bool canPartition(vector<int>& nums) {
         int n = nums.size();
         int totalSum = accumulate(nums.begin(), nums.end(), 0);
-        vector<vector<int>> dp(n, vector<int>(totalSum+1, -1));
+        // vector<vector<int>> dp(n, vector<int>(totalSum+1, -1));
+        // return isPartitionPossible(0, 0, totalSum, nums, dp);
 
-        return isPartitionPossible(0, 0, totalSum, nums, dp);
+        vector<vector<int>> dp(n+1, vector<int>(totalSum+1, -1));
+        for(int subSetSum=totalSum; subSetSum>=0; subSetSum--)
+            dp[n][subSetSum] = subSetSum * 2 == totalSum;
+
+        for(int i=n-1; i>=0; i--){
+            for(int subSetSum=totalSum; subSetSum>=0; subSetSum--){
+                // don't add to subSet
+                if(dp[i+1][subSetSum]){
+                    dp[i][subSetSum] = true;
+                    continue;
+                }
+                // add to subSet
+                if(subSetSum + nums[i] <= totalSum)
+                    dp[i][subSetSum] = dp[i + 1][subSetSum + nums[i]];
+                else    dp[i][subSetSum] = false;
+            }
+        }
+        return dp[0][0];
     }
 };
