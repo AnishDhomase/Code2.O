@@ -1,20 +1,21 @@
 class Solution {
-    bool isPossible(int i, int t, vector<int> &nums, vector<vector<int>> &dp){
-        if(t==0)    return true;
-        if(i==0)    return t == nums[0];
-        if(dp[i][t] != -1)  return dp[i][t];
-        bool notTake = isPossible(i-1, t, nums, dp);
-        bool take = false;
-        if(t-nums[i] >= 0)
-            take = isPossible(i-1, t-nums[i], nums, dp);
-        return dp[i][t] = take | notTake;
+    bool isPartitionPossible(int i, int subSetSum, int totalSum, vector<int>& nums, vector<vector<int>> &dp){
+        int n = nums.size();
+        if(i == n)  return subSetSum * 2 == totalSum;
+        if(dp[i][subSetSum] != -1)  return dp[i][subSetSum];
+        
+        // don't add to subSet
+        if(isPartitionPossible(i+1, subSetSum, totalSum, nums, dp))
+            return dp[i][subSetSum] = true;
+        // add to subSet
+        return dp[i][subSetSum] = isPartitionPossible(i+1, subSetSum + nums[i], totalSum, nums, dp);
     }
 public:
     bool canPartition(vector<int>& nums) {
         int n = nums.size();
-        int total = accumulate(nums.begin(), nums.end(), 0);
-        if(total % 2 == 1)  return false;
-        vector<vector<int>> dp(n, vector<int>(total/2+1, -1));
-        return isPossible(n-1, total/2, nums, dp);
+        int totalSum = accumulate(nums.begin(), nums.end(), 0);
+        vector<vector<int>> dp(n, vector<int>(totalSum+1, -1));
+
+        return isPartitionPossible(0, 0, totalSum, nums, dp);
     }
 };
