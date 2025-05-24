@@ -1,50 +1,29 @@
 class Solution {
-    int getMaxValueInGrid(vector<vector<int>>& grid){
-        int maxElem = INT_MIN;
-        for(auto row: grid){
-            int rowMax = *max_element(row.begin(), row.end());
-            maxElem = max(maxElem, rowMax);
-        }
-        return maxElem;
-    }
-    bool isPossibleToReachTargetCell(int time, vector<vector<int>>& grid){
+public:
+    int swimInWater(vector<vector<int>>& grid) {
         int n = grid.size();
-        vector<vector<int>> vis(n, vector<int>(n, 0));
-        queue<pair<int,int>> Q;
-        if(grid[0][0] <= time){
-            Q.push({0, 0});
-            vis[0][0] = 1;
-        }
+        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> minHeap; //{dist,y,x}
+        vector<vector<int>> dist(n, vector<int>(n, 1e9));
+        dist[0][0] = grid[0][0];
+        minHeap.push({dist[0][0], 0, 0});
         vector<int> dC = {0, 0, 1, -1};
         vector<int> dR = {1, -1, 0, 0};
-        while(Q.size() > 0){
-            auto currNode = Q.front();
-            int r = currNode.first, c = currNode.second;
-            Q.pop();
+        while(minHeap.size() > 0){
+            auto currNode = minHeap.top();
+            int currdist = currNode[0], r = currNode[1], c = currNode[2];
+            minHeap.pop();
             for(int i=0; i<4; i++){
                 int adjR = r + dR[i];
                 int adjC = c + dC[i];
                 if(adjC >= 0 && adjC < n && adjR >= 0 && adjR < n){
-                    if(grid[adjR][adjC] <= time && !vis[adjR][adjC]){
-                        vis[adjR][adjC] = 1;
-                        Q.push({adjR, adjC});
+                    int distToReachAdj = max(currdist, grid[adjR][adjC]);
+                    if(distToReachAdj < dist[adjR][adjC]){
+                        dist[adjR][adjC] = distToReachAdj;
+                        minHeap.push({distToReachAdj, adjR, adjC});
                     }
                 }
             }
         }
-        return vis[n-1][n-1];
-    }
-public:
-    int swimInWater(vector<vector<int>>& grid) {
-        int low = 0, high = getMaxValueInGrid(grid), ans = high;
-        while(low <= high){
-            int mid = low + (high - low) / 2;
-            if(isPossibleToReachTargetCell(mid, grid)){
-                ans = mid;
-                high = mid - 1;
-            }
-            else    low = mid + 1;
-        }
-        return ans;
+        return dist[n-1][n-1];
     }
 };
