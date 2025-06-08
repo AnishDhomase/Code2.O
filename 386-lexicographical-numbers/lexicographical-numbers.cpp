@@ -1,21 +1,17 @@
 class Solution {
-    void getPerm(int start, int n, vector<int> &ans){
-        if(start <= n){
-            if(start !=0) ans.push_back(start);
-        }
-        
-        for(int i=0; i<10; i++){
-            if(start==0 && i==0)    continue;
-            int nextPerm = start * 10 + i;
-            if(nextPerm <= n)
-                getPerm(nextPerm, n, ans);
-            else return;
+    void generateNext(int i, int n, vector<int> &ans){
+        if(i != 0)
+            ans.push_back(i);
+        for(int dig=0; dig<=9; dig++){
+            int nextNum = i*10 + dig;
+            if(nextNum <= n && nextNum != 0)
+                generateNext(nextNum, n, ans);
         }
     }
 public:
     vector<int> lexicalOrder(int n) {
         vector<int> ans;
-        getPerm(0, n, ans);
+        generateNext(0, n, ans);
         return ans;
     }
 };
